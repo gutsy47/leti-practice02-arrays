@@ -90,6 +90,7 @@ int main() {
     // Array initialization
     const int N = 100;
     int array[N], unsortedArray[N];
+    bool isArraySorted = false;
     fillArray(array, N);
     std::copy(std::begin(array), std::end(array), std::begin(unsortedArray));
 
@@ -113,6 +114,7 @@ int main() {
             case '1': {
                 fillArray(array, N);
                 std::cout << "Array refilled successfully\n";
+                isArraySorted = false;
                 break;
             }
 
@@ -123,13 +125,54 @@ int main() {
                 auto end = std::chrono::steady_clock::now();
                 auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
                 std::cout << "Array sorted. Elapsed time: " << elapsed_us << " ns\n";
+                isArraySorted = true;
+                break;
+            }
+            // Найти максимальный и минимальный элемент массива. Подсчитайте время поиска этих элементов в отсортированном массиве и неотсортированном, используя библиотеку chrono.
+            // Find max & min elements in sorted/unsorted array
+            case '3': {
+                // UnsortedError
+                if (!isArraySorted) {
+                    std::cout << "Array isn't sorted. Use command '2' to sort it\n";
+                    break;
+                }
+
+                int min = 100, max = -100;
+
+                // Min & max in unsorted array
+                auto start = std::chrono::steady_clock::now();
+                for (int i = 0; i < N; i++) {
+                    if (unsortedArray[i] < min) {
+                        min = unsortedArray[i];
+                    }
+                    else if (unsortedArray[i] > max) {
+                        max = unsortedArray[i];
+                    }
+                }
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << "Elements in unsorted array found. Elapsed time: " << elapsed_us << " ns\n";
+                std::cout << "min = " << min << "\nmax = " << max << std::endl;
+
+                // Min & max in sorted array
+                start = std::chrono::steady_clock::now();
+                min = array[0];
+                max = array[N-1];
+                end = std::chrono::steady_clock::now();
+                elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << "Elements in sorted array found. Elapsed time: " << elapsed_us << " ns\n";
+                std::cout << "min = " << min << "\nmax = " << max << std::endl;
+
+
                 break;
             }
 
             // Display array elements
             case '9': {
-                printArray(array, N);
+                std::cout << "Unsorted array:\n";
                 printArray(unsortedArray, N);
+                std::cout << "Sorted array:\n";
+                printArray(array, N);
                 break;
             }
 
