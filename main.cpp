@@ -128,7 +128,7 @@ int main() {
                 isArraySorted = true;
                 break;
             }
-            // Найти максимальный и минимальный элемент массива. Подсчитайте время поиска этих элементов в отсортированном массиве и неотсортированном, используя библиотеку chrono.
+
             // Find max & min elements in sorted/unsorted array
             case '3': {
                 // UnsortedError
@@ -163,7 +163,68 @@ int main() {
                 std::cout << "Elements in sorted array found. Elapsed time: " << elapsed_us << " ns\n";
                 std::cout << "min = " << min << "\nmax = " << max << std::endl;
 
+                break;
+            }
 
+            // Find round(avg(max, min)) and print indexes of elements equals to it
+            case '4': {
+                // In sorted & in unsorted? wdim?
+                break;
+            }
+
+            // Find amount of elements which less than user_input in sorted array
+            case '5': {
+                // UnsortedError
+                if (!isArraySorted) {
+                    std::cout << "Array isn't sorted. Use command '2' to sort it\n";
+                    break;
+                }
+
+                // User input
+                int userInput;
+                std::cout << "<< Enter an integer:\n>> ";
+                std::cin >> userInput;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+
+                // Search & display
+                int amount = 0;
+                for (int i = 0; i < N; i++) {
+                    amount += array[i] < userInput ? 1 : 0;
+                }
+                std::cout << "Elements less than " << userInput << ": " << amount << std::endl;
+                break;
+            }
+
+            // Find amount of elements which greater than user_input in sorted array
+            case '6': {
+                // UnsortedError
+                if (!isArraySorted) {
+                    std::cout << "Array isn't sorted. Use command '2' to sort it\n";
+                    break;
+                }
+
+                // User input
+                int userInput;
+                std::cout << "<< Enter an integer:\n>> ";
+                std::cin >> userInput;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+
+                // Search & display
+                int amount = 0;
+                for (int i = N-1; i >= 0; i--) {
+                    amount += array[i] > userInput ? 1 : 0;
+                }
+                std::cout << "Elements greater than " << userInput << ": " << amount << std::endl;
                 break;
             }
 
@@ -183,6 +244,11 @@ int main() {
                 std::cout << "h: Help\n";
                 std::cout << std::setw(32) << std::setfill('-') << '\n';
                 std::cout << "1: Refill the array with random numbers in range [-99, 99]\n";
+                std::cout << "2: Sort the array\n";
+                std::cout << "3: Find min and max elements. Compare search in sorted and unsorted arrays\n";
+                std::cout << "4: Find round average of max & min and print indexes of elements equals to it\n";
+                std::cout << "5: Find amount of elements which are less than user input in sorted array\n";
+                std::cout << "6: Find amount of elements which are greater than user input in sorted array\n";
                 std::cout << "9: Display array elements\n";
                 std::cout << std::setw(32) << std::setfill('-') << '\n';
                 std::cout << "0: Exit\n";
