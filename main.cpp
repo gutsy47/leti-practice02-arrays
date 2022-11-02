@@ -59,8 +59,20 @@ void insertSort(int arr[], int length) {
 }
 
 
-void quickSort(int arr[], int length) {
-
+void quickSort(int arr[], int first, int last) {
+    int mid = arr[(first + last) / 2];
+    int tmpLast = last, tmpFirst = first;
+    while (first < last) {
+        while (arr[first] < mid) first++;
+        while (arr[last] > mid) last--;
+        if (first <= last) {
+            std::swap(arr[first], arr[last]);
+            first++;
+            last--;
+        }
+    }
+    if (tmpFirst < last) quickSort(arr, tmpFirst, last);
+    if (first < tmpLast) quickSort(arr, first, tmpLast);
 }
 
 
@@ -122,7 +134,7 @@ int main() {
             // Sort the array
             case '2': {
                 auto start = std::chrono::steady_clock::now();
-                combSort(array, N);
+                quickSort(array, 0, N-1);
                 auto end = std::chrono::steady_clock::now();
                 auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
                 std::cout << "Array sorted. Elapsed time: " << elapsed_us << " ns\n";
