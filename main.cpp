@@ -114,6 +114,7 @@ int main() {
             case '1': {
                 fillArray(array, N);
                 std::cout << "Array refilled successfully\n";
+                std::copy(std::begin(array), std::end(array), std::begin(unsortedArray));
                 isArraySorted = false;
                 break;
             }
@@ -228,12 +229,60 @@ int main() {
                 break;
             }
 
+            // Compare binary and default searches (searching for user input). Print time diff
+            case '7': {
+                std::cout << "Nothing here\n";
+                break;
+            }
+
+            // Swap by indexes entered by the user. Print the time
+            case '8': {
+                // Input. This one is kinda huge
+                int index1, index2;
+                std::cout << "<< Enter 1st index:\n>> ";
+                std::cin >> index1;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+                if (index1 > N-1) {
+                    std::cout << "IndexError: list index out of range.\n";
+                    break;
+                }
+                std::cout << "<< Enter 2nd index:\n>> ";
+                std::cin >> index2;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+                if (index2 > N-1) {
+                    std::cout << "IndexError: list index out of range.\n";
+                    break;
+                }
+
+                // Swap
+                auto start = std::chrono::steady_clock::now();
+                std::swap(unsortedArray[index1], unsortedArray[index2]);
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << index1 << ": " << unsortedArray[index2] << " | ";
+                std::cout << index2 << ": " << unsortedArray[index1] << std::endl;
+                std::cout << "Elements swapped. Elapsed time: " << elapsed_us << " ns\n";
+                break;
+            }
+
             // Display array elements
             case '9': {
                 std::cout << "Unsorted array:\n";
                 printArray(unsortedArray, N);
-                std::cout << "Sorted array:\n";
-                printArray(array, N);
+                if (isArraySorted) {
+                    std::cout << "Sorted array:\n";
+                    printArray(array, N);
+                }
                 break;
             }
 
@@ -249,9 +298,13 @@ int main() {
                 std::cout << "4: Find round average of max & min and print indexes of elements equals to it\n";
                 std::cout << "5: Find amount of elements which are less than user input in sorted array\n";
                 std::cout << "6: Find amount of elements which are greater than user input in sorted array\n";
+                std::cout << "7: Find an element entered by the user via binary and default searches. Compare them\n";
+                std::cout << "8: Swap 2 elements by indexes entered by the user\n";
                 std::cout << "9: Display array elements\n";
                 std::cout << std::setw(32) << std::setfill('-') << '\n';
                 std::cout << "0: Exit\n";
+                std::cout << std::setw(32) << std::setfill('-') << '\n';
+                std::cout << "NOTE: Script will skip all the useless input (e.g. extra symbols in action input)\n";
                 std::cout << std::setw(32) << std::setfill('-') << '\n';
                 std::cout << std::setfill(' ');
                 break;
