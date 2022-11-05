@@ -115,7 +115,7 @@ int main() {
     std::cout << "Enter 'h' to get list of commands\n";
 
     // Array initialization
-    const int N = 10000;
+    const int N = 100;
     int array[N], unsortedArray[N];
     bool isArraySorted = false;
     fillArray(array, N);
@@ -194,9 +194,43 @@ int main() {
                 break;
             }
 
-            // Find round(avg(max, min)) and print indexes of elements equals to it
+            // Find avg(max, min) and print indexes of elements equals to it
             case '4': {
                 // In sorted & in unsorted? wdim?
+
+                // UnsortedError
+                if (!isArraySorted) {
+                    std::cout << "Array isn't sorted. Use command '2' to sort it\n";
+                    break;
+                }
+
+                // Average of max and min elements
+                int avg = (array[N-1] + array[0]) / 2;
+
+                // Find indexes of elements which equals to average
+                std::cout << "Elements equal to average of min and max\n";
+
+                // In sorted array using binary search to find entry
+                std::cout << "In sorted array: ";
+                auto start = std::chrono::steady_clock::now();
+                for (int i = binarySearch(array, 0, N, avg); i < N; i++) {
+                    if (array[i] != avg) break;
+                    std::cout << i << ' ';
+                }
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << "\nElapsed time: " << elapsed_us << " ns\n";
+
+                // In unsorted array
+                std::cout << "In unsorted array: ";
+                start = std::chrono::steady_clock::now();
+                for (int i = 0; i < N; i++) {
+                    if (unsortedArray[i] == avg) std::cout << i << ' ';
+                }
+                end = std::chrono::steady_clock::now();
+                elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << "\nElapsed time: " << elapsed_us << " ns\n";
+
                 break;
             }
 
