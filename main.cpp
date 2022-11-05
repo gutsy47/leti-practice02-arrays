@@ -76,16 +76,15 @@ void quickSort(int arr[], int first, int last) {
 }
 
 
-int binarySearch(int arr[], int length, int key) {
-    int left = 0, right = length;
-    int mid;
-    while (left <= right) {
-        mid = left + (right - left) / 2;
-        if (arr[mid] == key) return mid;
-        if (arr[mid] < key) {
-            left = mid + 1;
+int binarySearch(int arr[], int left, int right, int key) {
+    if (left <= right) {
+        int mid = left + (right - left) / 2;
+        if ((mid == 0 || key > arr[mid - 1]) && arr[mid] == key) {
+            return mid;
+        } else if (key > arr[mid]) {
+            return binarySearch(arr, mid + 1, right, key);
         } else {
-            right = mid - 1;
+            return binarySearch(arr, left, mid - 1, key);
         }
     }
     return -1;
@@ -95,7 +94,7 @@ int binarySearch(int arr[], int length, int key) {
 void printArray(int arr[], int length) {
     // Just print array
     for (int i = 0; i < length; i++) {
-        std::cout << i << '[' << arr[i] << ']' << ' ';
+        std::cout << arr[i] << ' ';
     }
     putchar('\n');
 }
@@ -284,7 +283,7 @@ int main() {
 
                 // Binary search
                 auto start = std::chrono::steady_clock::now();
-                result = binarySearch(array, N, userInput);
+                result = binarySearch(array, 0, N, userInput);
                 auto end = std::chrono::steady_clock::now();
                 auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
                 std::cout << " Binary search result: " << result << " Elapsed time: " << elapsed_us << " ns\n";
