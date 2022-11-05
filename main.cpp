@@ -76,10 +76,26 @@ void quickSort(int arr[], int first, int last) {
 }
 
 
+int binarySearch(int arr[], int length, int key) {
+    int left = 0, right = length;
+    int mid;
+    while (left <= right) {
+        mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[mid] < key) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+
+
 void printArray(int arr[], int length) {
     // Just print array
     for (int i = 0; i < length; i++) {
-        std::cout << arr[i] << ' ';
+        std::cout << i << '[' << arr[i] << ']' << ' ';
     }
     putchar('\n');
 }
@@ -100,7 +116,7 @@ int main() {
     std::cout << "Enter 'h' to get list of commands\n";
 
     // Array initialization
-    const int N = 100;
+    const int N = 10000;
     int array[N], unsortedArray[N];
     bool isArraySorted = false;
     fillArray(array, N);
@@ -243,7 +259,56 @@ int main() {
 
             // Compare binary and default searches (searching for user input). Print time diff
             case '7': {
-                std::cout << "Nothing here\n";
+                // UnsortedError
+                if (!isArraySorted) {
+                    std::cout << "Array isn't sorted. Use command '2' to sort it\n";
+                    break;
+                }
+
+                // Input
+                int userInput;
+                std::cout << "<< Enter an integer:\n>> ";
+                std::cin >> userInput;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+                if (userInput > N-1) {
+                    std::cout << "IndexError: list index out of range.\n";
+                    break;
+                }
+
+                int result;
+
+                // Binary search
+                auto start = std::chrono::steady_clock::now();
+                result = binarySearch(array, N, userInput);
+                auto end = std::chrono::steady_clock::now();
+                auto elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << " Binary search result: " << result << " Elapsed time: " << elapsed_us << " ns\n";
+
+                // Default search
+                start = std::chrono::steady_clock::now();
+                result = -1;
+                for (int i = 0; i < N; i++) {
+                    if (array[i] == userInput) {
+                        result = i;
+                        break;
+                    }
+                }
+                end = std::chrono::steady_clock::now();
+                elapsed_us = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+                std::cout << "Default search result: " << result << " Elapsed time: " << elapsed_us << " ns\n";
+
+                // Output
+                if (result != -1) {
+                    std::cout << "Element found. Position: " << result << std::endl;
+                } else {
+                    std::cout << "Element not found.\n";
+                }
+
                 break;
             }
 
