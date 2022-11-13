@@ -5,7 +5,7 @@
 #include <chrono>
 
 
-void bubbleSort(int arr[], int length) {
+void bubbleSort(int *arr, int length) {
     for (int i = length - 1; i > 0; i--) {
         for (int j = 0; j < i; j++) {
             if (arr[j] > arr[j + 1]) {
@@ -16,7 +16,7 @@ void bubbleSort(int arr[], int length) {
 }
 
 
-void shakerSort(int arr[], int length) {
+void shakerSort(int *arr, int length) {
     for (int i = length - 1; i > 0; i--) {
         for (int j = 0; j < i; j++) {
             if (arr[j] > arr[j + 1]) {
@@ -32,7 +32,7 @@ void shakerSort(int arr[], int length) {
 }
 
 
-void combSort(int arr[], int length) {
+void combSort(int *arr, int length) {
     int gap = length;
 
     while (gap != 1) {
@@ -50,7 +50,7 @@ void combSort(int arr[], int length) {
 }
 
 
-void insertSort(int arr[], int length) {
+void insertSort(int *arr, int length) {
     for (int i = 1; i < length; i++) {
         for (int j = i; j > 0 && arr[j - 1] > arr[j]; j--) {
             std::swap(arr[j - 1], arr[j]);
@@ -59,7 +59,7 @@ void insertSort(int arr[], int length) {
 }
 
 
-void quickSort(int arr[], int first, int last) {
+void quickSort(int *arr, int first, int last) {
     int mid = arr[(first + last) / 2];
     int tmpLast = last, tmpFirst = first;
     while (first < last) {
@@ -76,7 +76,25 @@ void quickSort(int arr[], int first, int last) {
 }
 
 
-int binarySearch(int arr[], int left, int right, int key) {
+void additionalTask(int *arr, int length, int *multiplesCount, int key) {
+    /* Каждый i & 1 != 0 уменьшить на userInput && *= randint(1, 9+1)
+     * Вывести количество кратных 1..9
+     */
+    std::srand(time(NULL));
+
+    for (int i = 0; i < 9; i++) multiplesCount[i] = 0;
+    for (int i = 0; i < length; i++) {
+        if ((i & 1) != 0) {
+            arr[i] = (arr[i] - key) * (1 + std::rand() % 9);
+        }
+        for (int divider = 1; divider < 10; divider++) {
+            multiplesCount[divider-1] += (arr[i] % divider == 0) ? 1 : 0;
+        }
+    }
+}
+
+
+int binarySearch(int *arr, int left, int right, int key) {
     if (left <= right) {
         int mid = left + (right - left) / 2;
         if ((mid == 0 || key > arr[mid - 1]) && arr[mid] == key) {
@@ -91,16 +109,16 @@ int binarySearch(int arr[], int left, int right, int key) {
 }
 
 
-void printArray(int arr[], int length) {
+void printArray(int *arr, int length) {
     // Just print array
     for (int i = 0; i < length; i++) {
-        std::cout << arr[i] << ' ';
+        std::cout << arr[i] << '\t';
     }
     putchar('\n');
 }
 
 
-void fillArray(int arr[], int length) {
+void fillArray(int *arr, int length) {
     // Fill array with pseudo-random nums in range [-99, 99]
     std::srand(time(NULL));
     for (int i = 0; i < length; i++) {
@@ -357,7 +375,7 @@ int main() {
                     std::cin.clear();
                     break;
                 }
-                if (index1 > N-1) {
+                if (index1 > N-1 || index1 < 0) {
                     std::cout << "IndexError: list index out of range.\n";
                     break;
                 }
@@ -369,7 +387,7 @@ int main() {
                     std::cin.clear();
                     break;
                 }
-                if (index2 > N-1) {
+                if (index2 > N-1 || index2 < 0) {
                     std::cout << "IndexError: list index out of range.\n";
                     break;
                 }
@@ -382,6 +400,38 @@ int main() {
                 std::cout << index1 << ": " << unsortedArray[index2] << " | ";
                 std::cout << index2 << ": " << unsortedArray[index1] << std::endl;
                 std::cout << "Elements swapped. Elapsed time: " << elapsed_us << " ns\n";
+                break;
+            }
+
+            // Individual task
+            case 'i': {
+                // Input
+                int userInput;
+                std::cout << "<< Enter an integer:\n>> ";
+                std::cin >> userInput;
+                std::cin.sync();
+                if (std::cin.fail()) {
+                    std::cout << "TypeError: invalid literal for int with base 10.\n";
+                    std::cin.clear();
+                    break;
+                }
+
+                // Task
+                int multiplesCount[9];
+                std::cout << "Before:\n";
+                printArray(unsortedArray, N);
+                additionalTask(unsortedArray, N, multiplesCount, userInput);
+                isArraySorted = false;
+
+                std::cout << "After:\n";
+                printArray(unsortedArray, N);
+                std::cout << "T2 res:\n";
+                for (int i = 1; i < 10; i++) {
+                    std::cout << i << '\t';
+                }
+                putchar('\n');
+                printArray(multiplesCount, 9);
+
                 break;
             }
 
